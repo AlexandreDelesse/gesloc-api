@@ -1,11 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "j2HC7HhaVRn2VhKpivN3zM2uy4KHCYfC8FtZYJaoA38=",
-  "Source": "GeslocApi",
-  "BasePath": "_content/GeslocApi",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
-}
+{"Version":1,"Hash":"AMEwJacQZ6LDXiNVNU+b0Z8O9hV9FV2TfJ18WExOFKY=","Source":"GeslocApi","BasePath":"/","Mode":"Root","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

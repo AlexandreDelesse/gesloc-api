@@ -1,4 +1,3 @@
-
 using GeslocApi.Application.Interfaces;
 using GeslocApi.Application.Services;
 using GeslocApi.Infrastructure.Persistence;
@@ -6,29 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// SQLite Databse
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data source=gesloc.db"));
+// PostgreSQL
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 // Services
 builder.Services.AddScoped<IPropertyService, PropertyService>();
-// Define CORS policy
+builder.Services.AddScoped<ITenancyService, TenancyService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ICandidateService, CandidateService>();
+builder.Services.AddScoped<ICandidateLinkService, CandidateLinkService>();
+
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
-    });
+        policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -36,11 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Activate CORS policy
 app.UseCors("AllowFrontend");
-
 app.MapControllers();
 
 app.Run();
-

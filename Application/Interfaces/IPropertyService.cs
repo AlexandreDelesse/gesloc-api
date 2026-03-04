@@ -5,9 +5,9 @@ namespace GeslocApi.Application.Interfaces;
 
 public interface IPropertyService
 {
-        // Task<PropertyDto> GetByIdAsync(Guid id);
-        Task<IEnumerable<PropertyDto>> GetAllAsync();
-        Task<PropertyDto> CreateAsync(CreatePropertyDto dto);
-        // Task<PropertyDto> UpdateAsync(Guid id, UpdatePropertyDto dto);
-        Task<bool> DeleteAsync(Guid id);
-    }
+    Task<IEnumerable<PropertyDto>> GetAllAsync();
+    Task<PropertyDto?> GetByIdAsync(Guid id);
+    Task<PropertyDto> CreateAsync(CreatePropertyDto dto);
+    Task<PropertyDto?> UpdateAsync(Guid id, UpdatePropertyDto dto);
+    Task<bool> DeleteAsync(Guid id);
+}

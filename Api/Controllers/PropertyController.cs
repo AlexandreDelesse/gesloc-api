@@ -3,35 +3,47 @@ using GeslocApi.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/properties")]
 public class PropertyController : ControllerBase
 {
+    private readonly IPropertyService _service;
 
-    private readonly IPropertyService _propertyService;
-
-    public PropertyController(IPropertyService propertyService)
+    public PropertyController(IPropertyService service)
     {
-        _propertyService = propertyService;
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(CreatePropertyDto cmd)
-    {
-        var property = await _propertyService.CreateAsync(cmd);
-        return Ok(property);
+        _service = service;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var properties = await _propertyService.GetAllAsync();
-        return Ok(properties);
+        return Ok(await _service.GetAllAsync());
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await _service.GetByIdAsync(id);
+        return result == null ? NotFound() : Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreatePropertyDto dto)
+    {
+        var result = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, UpdatePropertyDto dto)
+    {
+        var result = await _service.UpdateAsync(id, dto);
+        return result == null ? NotFound() : Ok(result);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var success = await _service.DeleteAsync(id);
+        return success ? NoContent() : NotFound();
     }
 }
-
-// app.MapPost("/porperties", async (Property p, AppDbContext db) =>
-// {
-//     db.Properties.Add(p);
-//     await db.SaveChangesAsync();
-//     return Results.Created($"/properties/{p.Id}", p);
-// });

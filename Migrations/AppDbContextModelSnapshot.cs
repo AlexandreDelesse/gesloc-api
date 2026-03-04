@@ -4,6 +4,7 @@ using GeslocApi.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,28 +16,293 @@ namespace GeslocApi.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.Candidate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CoverLetter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmploymentType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("GdprConsent")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("GuarantorEmploymentType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GuarantorFirstName")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("GuarantorIncome")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("GuarantorLastName")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("HasGuarantor")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("Income")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SubmittedAt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Candidates");
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.CandidateDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CandidateId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("File")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsGuarantorDoc")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("CandidateDocuments");
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.CandidateLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PropertyName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CandidateLinks");
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("ChargesAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("DueDate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PaidAt")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Period")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("RentAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenancyId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payments");
+                });
 
             modelBuilder.Entity("GeslocApi.Domain.Entities.Property", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("Informations")
+                    b.Property<string>("ApartmentNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Building")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BuildingType")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ConstructionYear")
+                        .HasColumnType("integer");
+
+                    b.Property<string[]>("Equipment")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("HeatingType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("HotWaterType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("InternetAccess")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("InternetType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LegalRegime")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
-                    b.Property<int>("Surface")
-                        .HasColumnType("INTEGER");
+                    b.Property<int?>("RoomCount")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Surface")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.Tenancy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("ChargesAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ChargesType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DurationMonths")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LegalFramework")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PaymentDueDay")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PropertyUse")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("RentAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("SecurityDeposit")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("SignedDocument")
+                        .HasColumnType("text");
+
+                    b.Property<string>("StartDate")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenancies");
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.CandidateDocument", b =>
+                {
+                    b.HasOne("GeslocApi.Domain.Entities.Candidate", null)
+                        .WithMany("Documents")
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GeslocApi.Domain.Entities.Property", b =>
@@ -44,23 +310,30 @@ namespace GeslocApi.Migrations
                     b.OwnsOne("GeslocApi.Domain.Entities.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("PropertyId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("City")
                                 .IsRequired()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("text")
+                                .HasColumnName("Address_City");
 
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
+                            b1.Property<int?>("Number")
+                                .HasColumnType("integer")
+                                .HasColumnName("Address_Number");
 
-                            b1.Property<string>("PostalCode")
+                            b1.Property<string>("PostCode")
                                 .IsRequired()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("text")
+                                .HasColumnName("Address_PostCode");
+
+                            b1.Property<string>("Residence")
+                                .HasColumnType("text")
+                                .HasColumnName("Address_Residence");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("text")
+                                .HasColumnName("Address_Street");
 
                             b1.HasKey("PropertyId");
 
@@ -70,8 +343,207 @@ namespace GeslocApi.Migrations
                                 .HasForeignKey("PropertyId");
                         });
 
+                    b.OwnsOne("GeslocApi.Domain.Entities.Person", "Owner", b1 =>
+                        {
+                            b1.Property<Guid>("PropertyId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Owner_FirstName");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Owner_LastName");
+
+                            b1.HasKey("PropertyId");
+
+                            b1.ToTable("Properties");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId");
+
+                            b1.OwnsOne("GeslocApi.Domain.Entities.Address", "Address", b2 =>
+                                {
+                                    b2.Property<Guid>("PersonPropertyId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<string>("City")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Owner_Address_City");
+
+                                    b2.Property<int?>("Number")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("Owner_Address_Number");
+
+                                    b2.Property<string>("PostCode")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Owner_Address_PostCode");
+
+                                    b2.Property<string>("Residence")
+                                        .HasColumnType("text")
+                                        .HasColumnName("Owner_Address_Residence");
+
+                                    b2.Property<string>("Street")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Owner_Address_Street");
+
+                                    b2.HasKey("PersonPropertyId");
+
+                                    b2.ToTable("Properties");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("PersonPropertyId");
+                                });
+
+                            b1.Navigation("Address");
+                        });
+
                     b.Navigation("Address")
                         .IsRequired();
+
+                    b.Navigation("Owner")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.Tenancy", b =>
+                {
+                    b.OwnsOne("GeslocApi.Domain.Entities.Person", "Guarantor", b1 =>
+                        {
+                            b1.Property<Guid>("TenancyId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Guarantor_FirstName");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Guarantor_LastName");
+
+                            b1.HasKey("TenancyId");
+
+                            b1.ToTable("Tenancies");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TenancyId");
+
+                            b1.OwnsOne("GeslocApi.Domain.Entities.Address", "Address", b2 =>
+                                {
+                                    b2.Property<Guid>("PersonTenancyId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<string>("City")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Guarantor_Address_City");
+
+                                    b2.Property<int?>("Number")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("Guarantor_Address_Number");
+
+                                    b2.Property<string>("PostCode")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Guarantor_Address_PostCode");
+
+                                    b2.Property<string>("Residence")
+                                        .HasColumnType("text")
+                                        .HasColumnName("Guarantor_Address_Residence");
+
+                                    b2.Property<string>("Street")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Guarantor_Address_Street");
+
+                                    b2.HasKey("PersonTenancyId");
+
+                                    b2.ToTable("Tenancies");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("PersonTenancyId");
+                                });
+
+                            b1.Navigation("Address");
+                        });
+
+                    b.OwnsOne("GeslocApi.Domain.Entities.Person", "Tenant", b1 =>
+                        {
+                            b1.Property<Guid>("TenancyId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Tenant_FirstName");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("Tenant_LastName");
+
+                            b1.HasKey("TenancyId");
+
+                            b1.ToTable("Tenancies");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TenancyId");
+
+                            b1.OwnsOne("GeslocApi.Domain.Entities.Address", "Address", b2 =>
+                                {
+                                    b2.Property<Guid>("PersonTenancyId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<string>("City")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Tenant_Address_City");
+
+                                    b2.Property<int?>("Number")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("Tenant_Address_Number");
+
+                                    b2.Property<string>("PostCode")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Tenant_Address_PostCode");
+
+                                    b2.Property<string>("Residence")
+                                        .HasColumnType("text")
+                                        .HasColumnName("Tenant_Address_Residence");
+
+                                    b2.Property<string>("Street")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("Tenant_Address_Street");
+
+                                    b2.HasKey("PersonTenancyId");
+
+                                    b2.ToTable("Tenancies");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("PersonTenancyId");
+                                });
+
+                            b1.Navigation("Address");
+                        });
+
+                    b.Navigation("Guarantor");
+
+                    b.Navigation("Tenant")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GeslocApi.Domain.Entities.Candidate", b =>
+                {
+                    b.Navigation("Documents");
                 });
 #pragma warning restore 612, 618
         }
